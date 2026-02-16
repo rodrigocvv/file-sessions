@@ -4,6 +4,15 @@
   "description": "Save, manage, and restore groups of open files in your workspace",
   "version": "1.0.0",
   "publisher": "your-publisher-name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/file-sessions.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/file-sessions/issues"
+  },
+  "homepage": "https://github.com/your-username/file-sessions#readme",
   "engines": {
     "vscode": "^1.85.0"
   },
