@@ -4,12 +4,18 @@
 
 import * as vscode from 'vscode';
 import { SessionService } from '../application/sessionService';
+import { BranchSessionService } from '../application/branchSessionService';
+import { TimelineService } from '../application/timelineService';
 import { SessionTreeItem, FileTreeItem } from './treeItems';
+import { BranchTreeItem, BranchFileTreeItem } from './branchTreeItems';
+import { TimelineSnapshotTreeItem } from './timelineTreeItems';
 import * as vscodeAdapter from '../infrastructure/vscodeAdapter';
 
 export class CommandManager {
   constructor(
     private readonly sessionService: SessionService,
+    private readonly branchSessionService: BranchSessionService,
+    private readonly timelineService: TimelineService,
     private readonly context: vscode.ExtensionContext
   ) {}
 
@@ -32,6 +38,36 @@ export class CommandManager {
     );
     this.registerCommand('fileSessions.removeFileFromSession', (item: FileTreeItem) =>
       this.handleRemoveFileFromSession(item)
+    );
+
+    // Branch session commands
+    this.registerCommand('fileSessions.openBranchSession', (item: BranchTreeItem) =>
+      this.handleOpenBranchSession(item)
+    );
+    this.registerCommand('fileSessions.deleteBranchSession', (item: BranchTreeItem) =>
+      this.handleDeleteBranchSession(item)
+    );
+    this.registerCommand(
+      'fileSessions.removeFileFromBranchSession',
+      (item: BranchFileTreeItem) => this.handleRemoveFileFromBranchSession(item)
+    );
+
+    // Timeline commands
+    this.registerCommand(
+      'fileSessions.restoreTimelineSnapshot',
+      (item: TimelineSnapshotTreeItem) => this.handleRestoreTimelineSnapshot(item)
+    );
+    this.registerCommand(
+      'fileSessions.deleteTimelineSnapshot',
+      (item: TimelineSnapshotTreeItem) => this.handleDeleteTimelineSnapshot(item)
+    );
+    this.registerCommand('fileSessions.clearAllTimelineSnapshots', () =>
+      this.handleClearAllTimelineSnapshots()
+    );
+
+    // Settings command
+    this.registerCommand('fileSessions.openSettings', () =>
+      this.handleOpenSettings()
     );
   }
 
@@ -202,5 +238,185 @@ export class CommandManager {
         `Failed to remove file: ${error instanceof Error ? error.message : String(error)}`
       );
     }
+  }
+
+  /**
+   * Handle open branch session command
+   */
+  private async handleOpenBranchSession(item: BranchTreeItem): Promise<void> {
+    if (!item || !item.session) {
+      vscodeAdapter.showError('Invalid branch session');
+      return;
+    }
+
+    await this.branchSessionService.openBranchSession(item.session.id);
+  }
+
+  /**
+   * Handle delete branch session command
+   */
+  private async handleDeleteBranchSession(item: BranchTreeItem): Promise<void> {
+    if (!item || !item.session) {
+      vscodeAdapter.showError('Invalid branch session');
+      return;
+    }
+
+    try {
+      const confirmation = await vscode.window.showWarningMessage(
+        `Delete branch session for "${item.session.branchName}" (${item.session.workspaceFolder})?`,
+        { modal: true },
+        'Delete'
+      );
+
+      if (confirmation !== 'Delete') {
+        return; // User cancelled
+      }
+
+      const success = await this.branchSessionService.deleteBranchSession(
+        item.session.id
+      );
+
+      if (success) {
+        vscodeAdapter.showInfo('Branch session deleted successfully');
+      }
+    } catch (error) {
+      vscodeAdapter.showError(
+        `Failed to delete branch session: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
+  }
+
+  /**
+   * Handle remove file from branch session command
+   */
+  private async handleRemoveFileFromBranchSession(
+    item: BranchFileTreeItem
+  ): Promise<void> {
+    if (!item || !item.file) {
+      vscodeAdapter.showError('Invalid file');
+      return;
+    }
+
+    try {
+      const success = await this.branchSessionService.removeFileFromBranchSession(
+        item.sessionId,
+        item.file.path
+      );
+
+      if (success) {
+        vscodeAdapter.showInfo('File removed from branch session');
+      }
+    } catch (error) {
+      vscodeAdapter.showError(
+        `Failed to remove file from branch session: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
+  }
+
+  /**
+   * Handle restore timeline snapshot command
+   */
+  private async handleRestoreTimelineSnapshot(
+    item: TimelineSnapshotTreeItem
+  ): Promise<void> {
+    if (!item || !item.snapshot) {
+      vscodeAdapter.showError('Invalid snapshot');
+      return;
+    }
+
+    try {
+      await this.timelineService.restoreSnapshot(item.snapshot.id);
+    } catch (error) {
+      vscodeAdapter.showError(
+        `Failed to restore snapshot: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
+  }
+
+  /**
+   * Handle delete timeline snapshot command
+   */
+  private async handleDeleteTimelineSnapshot(
+    item: TimelineSnapshotTreeItem
+  ): Promise<void> {
+    if (!item || !item.snapshot) {
+      vscodeAdapter.showError('Invalid snapshot');
+      return;
+    }
+
+    try {
+      const confirmation = await vscode.window.showWarningMessage(
+        `Delete this timeline snapshot?`,
+        { modal: true },
+        'Delete'
+      );
+
+      if (confirmation !== 'Delete') {
+        return; // User cancelled
+      }
+
+      const result = await this.timelineService.deleteSnapshot(item.snapshot.id);
+
+      if (result === true) {
+        vscodeAdapter.showInfo('Timeline snapshot deleted successfully');
+      } else if (typeof result === 'string') {
+        vscodeAdapter.showError(result);
+      }
+    } catch (error) {
+      vscodeAdapter.showError(
+        `Failed to delete snapshot: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
+  }
+
+  /**
+   * Handle clear all timeline snapshots command
+   */
+  private async handleClearAllTimelineSnapshots(): Promise<void> {
+    try {
+      const snapshots = this.timelineService.getAllSnapshots();
+
+      if (snapshots.length === 0) {
+        vscodeAdapter.showInfo('Timeline is already empty');
+        return;
+      }
+
+      const confirmation = await vscode.window.showWarningMessage(
+        `Clear all ${snapshots.length} timeline snapshots?`,
+        { modal: true },
+        'Clear All'
+      );
+
+      if (confirmation !== 'Clear All') {
+        return; // User cancelled
+      }
+
+      await this.timelineService.clearAllSnapshots();
+      vscodeAdapter.showInfo('All timeline snapshots cleared successfully');
+    } catch (error) {
+      vscodeAdapter.showError(
+        `Failed to clear timeline: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
+    }
+  }
+
+  /**
+   * Handle open settings command
+   */
+  private async handleOpenSettings(): Promise<void> {
+    await vscode.commands.executeCommand(
+      'workbench.action.openSettings',
+      '@ext:your-publisher-name.file-sessions'
+    );
   }
 }

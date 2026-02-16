@@ -71,3 +71,20 @@ export function deduplicateFiles<T extends { path: string }>(files: T[]): T[] {
 
   return Array.from(seen.values());
 }
+
+/**
+ * Validate timeline snapshot structure
+ */
+export function isValidTimelineSnapshot(snapshot: unknown): boolean {
+  if (!snapshot || typeof snapshot !== 'object') {
+    return false;
+  }
+
+  const s = snapshot as Record<string, unknown>;
+  return (
+    typeof s.id === 'string' &&
+    typeof s.timestamp === 'number' &&
+    Array.isArray(s.files)
+  );
+}
+
