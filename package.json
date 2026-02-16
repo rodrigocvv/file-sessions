@@ -1,0 +1,164 @@
+{
+  "name": "file-sessions",
+  "displayName": "File Sessions",
+  "description": "Save, manage, and restore groups of open files in your workspace",
+  "version": "1.0.0",
+  "publisher": "your-publisher-name",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "sessions",
+    "files",
+    "workspace",
+    "tabs",
+    "restore"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "fileSessions",
+          "title": "File Sessions",
+          "icon": "$(folder-library)"
+        }
+      ]
+    },
+    "views": {
+      "fileSessions": [
+        {
+          "id": "fileSessions.sessionsView",
+          "name": "Sessions",
+          "icon": "$(folder-library)"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "fileSessions.saveSession",
+        "title": "Save File Session",
+        "category": "File Sessions",
+        "icon": "$(save)"
+      },
+      {
+        "command": "fileSessions.openSession",
+        "title": "Open Session",
+        "category": "File Sessions",
+        "icon": "$(folder-opened)"
+      },
+      {
+        "command": "fileSessions.openFiles",
+        "title": "Open Files",
+        "category": "File Sessions",
+        "icon": "$(files)"
+      },
+      {
+        "command": "fileSessions.renameSession",
+        "title": "Rename Session",
+        "category": "File Sessions",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "fileSessions.deleteSession",
+        "title": "Delete Session",
+        "category": "File Sessions",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "fileSessions.removeFileFromSession",
+        "title": "Remove File from Session",
+        "category": "File Sessions",
+        "icon": "$(close)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "fileSessions.saveSession",
+          "when": "view == fileSessions.sessionsView",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "fileSessions.openSession",
+          "when": "view == fileSessions.sessionsView && viewItem == session",
+          "group": "inline"
+        },
+        {
+          "command": "fileSessions.openFiles",
+          "when": "view == fileSessions.sessionsView && viewItem == session",
+          "group": "open@1"
+        },
+        {
+          "command": "fileSessions.renameSession",
+          "when": "view == fileSessions.sessionsView && viewItem == session",
+          "group": "manage@1"
+        },
+        {
+          "command": "fileSessions.deleteSession",
+          "when": "view == fileSessions.sessionsView && viewItem == session",
+          "group": "manage@2"
+        },
+        {
+          "command": "fileSessions.removeFileFromSession",
+          "when": "view == fileSessions.sessionsView && viewItem == sessionFile",
+          "group": "inline"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "fileSessions.saveSession"
+        },
+        {
+          "command": "fileSessions.openSession",
+          "when": "false"
+        },
+        {
+          "command": "fileSessions.openFiles",
+          "when": "false"
+        },
+        {
+          "command": "fileSessions.renameSession",
+          "when": "false"
+        },
+        {
+          "command": "fileSessions.deleteSession",
+          "when": "false"
+        },
+        {
+          "command": "fileSessions.removeFileFromSession",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "File Sessions",
+      "properties": {
+        "fileSessions.closeExistingEditorsOnOpen": {
+          "type": "boolean",
+          "default": false,
+          "description": "Close existing editors that are not part of the session when opening it"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.x",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.0"
+  }
+}
