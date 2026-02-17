@@ -3,16 +3,17 @@
   "displayName": "File Sessions",
   "description": "Save, manage, and restore groups of open files in your workspace",
   "version": "1.0.0",
-  "publisher": "your-publisher-name",
+  "publisher": "rodrigocvv",
+  "icon": "icon.png",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/file-sessions.git"
+    "url": "https://github.com/rodrigocvv/file-sessions.git"
   },
   "bugs": {
-    "url": "https://github.com/your-username/file-sessions/issues"
+    "url": "https://github.com/rodrigocvv/file-sessions/issues"
   },
-  "homepage": "https://github.com/your-username/file-sessions#readme",
+  "homepage": "https://github.com/rodrigocvv/file-sessions#readme",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -33,7 +34,7 @@
         {
           "id": "fileSessions",
           "title": "File Sessions",
-          "icon": "$(folder-library)"
+          "icon": "resources/activity-bar-icon.svg"
         }
       ]
     },

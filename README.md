@@ -23,6 +23,8 @@ Have you ever experienced these frustrating moments?
 #### 📁 **1. Saved Sessions** (Manual)
 Create named groups of files for different tasks or features. Perfect for organizing your work.
 
+![Saved Sessions Demo](images/Demo1.gif)
+
 - 💾 Save all currently open files with one click
 - 🏷️ Name sessions by feature, task, or context
 - 📂 Organize files that belong together
@@ -31,6 +33,8 @@ Create named groups of files for different tasks or features. Perfect for organi
 
 #### 🌿 **2. Branch Sessions** (Automatic)
 Automatically save and restore files when switching Git branches. Your context follows your branches!
+
+![Branches Session](images/Demo2.gif)
 
 - 🤖 **Fully automatic** - no manual intervention needed
 - 🔀 Saves your open files when you switch branches
@@ -58,7 +62,7 @@ Intelligent automatic snapshots of your workspace over time. Like "Undo" for you
 
 Or install via command line:
 ```bash
-code --install-extension your-publisher-name.file-sessions
+code --install-extension rodrigocvv.file-sessions
 ```
 
 ## 📖 Complete Usage Guide
@@ -74,7 +78,6 @@ code --install-extension your-publisher-name.file-sessions
 5. Done! Your session is saved and appears in the tree view
 
 ![Save Session Demo](images/save-session.gif)
-*Coming soon: GIF showing session creation*
 
 #### Opening a Session
 
@@ -86,9 +89,6 @@ code --install-extension your-publisher-name.file-sessions
 - Press `Ctrl+Shift+P` / `Cmd+Shift+P`
 - Type "File Sessions: Save File Session"
 - Select your session
-
-![Open Session Demo](images/open-session.gif)
-*Coming soon: GIF showing session restoration*
 
 #### Managing Sessions
 
@@ -127,8 +127,6 @@ Branch Sessions are **completely automatic** and require **no manual interventio
    - You open files and work on them
    - Next time you return, those files will be auto-restored
 
-![Branch Sessions Demo](images/branch-sessions.gif)
-*Coming soon: GIF showing automatic branch session behavior*
 
 #### Managing Branch Sessions
 
@@ -182,9 +180,6 @@ The Timeline feature uses intelligent detection to create snapshots when signifi
 - **Delete Single**: Right-click snapshot → "Delete Snapshot"
 - **Clear All**: Click **🗑️ Clear All** button at the top of Timeline view
 
-![Timeline Demo](images/timeline.gif)
-*Coming soon: GIF showing timeline restoration*
-
 #### Timeline Use Cases
 
 💡 **"What was I working on yesterday?"** - Check timeline to see your context  
@@ -197,6 +192,8 @@ The Timeline feature uses intelligent detection to create snapshots when signifi
 ## ⚙️ Configuration
 
 Access settings via `File → Preferences → Settings` and search for "File Sessions", or click the ⚙️ gear icon in any File Sessions view.
+
+![Settings](images/Demo3.gif)
 
 ### Manual Sessions
 
@@ -634,20 +631,6 @@ File Sessions stores all data in **VS Code's workspace state** (local only):
 - **No file contents**: Doesn't save file changes (use Git for that!)
 - **Timeline cap**: Maximum 50 snapshots (oldest auto-deleted)
 
----
-
-## 🚀 Coming Soon
-
-Vote on features at our [GitHub Issues](https://github.com/your-username/file-sessions/issues)!
-
-- 🎨 Custom session icons/colors
-- 📤 Export/import sessions (share with team)
-- 🔄 Sync sessions across machines
-- 📐 Editor group layout preservation
-- 🏷️ Session tags and filtering
-- 📊 Session analytics and insights
-- ⌨️ Custom keyboard shortcuts
-- 🌐 Remote file support (SSH/WSL)
 
 ---
 
@@ -702,7 +685,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/your-username/file-sessions/issues)
 - 💡 **Feature Requests**: [GitHub Issues](https://github.com/your-username/file-sessions/issues)
 - ⭐ **Rate & Review**: [VS Code Marketplace](https://marketplace.visualstudio.com/)
-- 📧 **Contact**: your-email@example.com
 
 ---
 
@@ -717,21 +699,9 @@ Special thanks to:
 
 ---
 
-## 📸 Screenshots
-
-> **Note to publisher**: Add GIF/screenshots at these locations:
-> - `images/save-session.gif` - Creating and saving a session
-> - `images/open-session.gif` - Opening and restoring a session
-> - `images/branch-sessions.gif` - Automatic branch session behavior
-> - `images/timeline.gif` - Timeline restoration in action
-
----
-
 <div align="center">
 
 **[⬆ Back to Top](#file-sessions)**
-
-Made with ⚡ by developers, for developers.
 
 If this extension helps your workflow, please ⭐ **star** and ✍️ **review** it!
 
