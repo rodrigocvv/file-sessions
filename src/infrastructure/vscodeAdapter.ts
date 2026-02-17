@@ -40,6 +40,36 @@ export function getAllOpenFiles(): SessionFile[] {
 }
 
 /**
+ * Get the currently active editor file
+ * @returns SessionFile if a valid file is active, undefined otherwise
+ */
+export function getActiveEditorFile(): SessionFile | undefined {
+  const activeEditor = vscode.window.activeTextEditor;
+  
+  if (!activeEditor) {
+    return undefined;
+  }
+
+  const uri = activeEditor.document.uri;
+  
+  // Only include file scheme URIs (not untitled, git, etc.)
+  if (uri.scheme !== 'file') {
+    return undefined;
+  }
+
+  const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+  
+  if (!workspaceFolder) {
+    return undefined;
+  }
+
+  return {
+    path: uri.fsPath,
+    workspaceFolder: workspaceFolder.name,
+  };
+}
+
+/**
  * Open a file in the editor
  */
 export async function openFile(

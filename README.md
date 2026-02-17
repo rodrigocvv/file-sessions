@@ -92,6 +92,7 @@ code --install-extension rodrigocvv.file-sessions
 
 #### Managing Sessions
 
+- **Add Current File**: Click the **➕ add icon** next to a session to add the currently open file
 - **Rename**: Right-click session → "Rename Session"
 - **Delete**: Right-click session → "Delete Session"
 - **Remove Individual Files**: Expand session → click **✖️** next to a file
@@ -379,6 +380,7 @@ Manual sessions you create for different tasks and features.
 **Actions:**
 - 💾 **Save** (toolbar) - Create new session from open files
 - 📂 **Open** - Restore all files from session
+- ➕ **Add File** - Add currently open file to session
 - ✏️ **Rename** - Change session name
 - 🗑️ **Delete** - Remove session
 - ✖️ **Remove File** - Remove single file from session

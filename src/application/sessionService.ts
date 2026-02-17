@@ -4,7 +4,7 @@
  */
 
 import * as vscode from 'vscode';
-import { FileSession, createSession, updateSession } from '../domain/session';
+import { FileSession, SessionFile, createSession, updateSession } from '../domain/session';
 import {
   validateSessionName,
   isSessionNameDuplicate,
@@ -237,6 +237,54 @@ export class SessionService {
       return true;
     } catch (error) {
       const message = `Failed to delete session: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+      this.logger.appendLine(message);
+      vscodeAdapter.showError(message);
+      return false;
+    }
+  }
+
+  /**
+   * Add a file to an existing session
+   */
+  async addFileToSession(sessionId: string, file: SessionFile): Promise<boolean> {
+    try {
+      const session = this.getSessionById(sessionId);
+      if (!session) {
+        vscodeAdapter.showError('Session not found');
+        return false;
+      }
+
+      // Check if file already exists in session
+      const fileExists = session.files.some((f) => f.path === file.path);
+      if (fileExists) {
+        vscodeAdapter.showInfo(`File is already in session "${session.name}"`);
+        return false;
+      }
+
+      // Add file to session
+      const updatedFiles = [...session.files, file];
+      const deduplicatedFiles = deduplicateFiles(updatedFiles);
+
+      // Update session
+      const updatedSession = updateSession(session, { files: deduplicatedFiles });
+      const index = this.sessions.findIndex((s) => s.id === sessionId);
+      this.sessions[index] = updatedSession;
+
+      // Persist to storage
+      await this.repository.saveSessions(this.sessions);
+
+      // Emit event
+      this.events.emit({ type: 'sessionUpdated', session: updatedSession });
+
+      this.logger.appendLine(
+        `Added file "${file.path}" to session "${session.name}"`
+      );
+
+      return true;
+    } catch (error) {
+      const message = `Failed to add file: ${
         error instanceof Error ? error.message : String(error)
       }`;
       this.logger.appendLine(message);

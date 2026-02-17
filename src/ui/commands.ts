@@ -36,6 +36,9 @@ export class CommandManager {
     this.registerCommand('fileSessions.deleteSession', (item: SessionTreeItem) =>
       this.handleDeleteSession(item)
     );
+    this.registerCommand('fileSessions.addFileToSession', (item: SessionTreeItem) =>
+      this.handleAddFileToSession(item)
+    );
     this.registerCommand('fileSessions.removeFileFromSession', (item: FileTreeItem) =>
       this.handleRemoveFileFromSession(item)
     );
@@ -211,6 +214,40 @@ export class CommandManager {
     } catch (error) {
       vscodeAdapter.showError(
         `Failed to delete session: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
+  }
+
+  /**
+   * Handle add file to session command
+   */
+  private async handleAddFileToSession(item: SessionTreeItem): Promise<void> {
+    if (!item || !item.session) {
+      vscodeAdapter.showError('Invalid session');
+      return;
+    }
+
+    try {
+      // Get the currently active editor file
+      const activeFile = vscodeAdapter.getActiveEditorFile();
+      
+      if (!activeFile) {
+        vscodeAdapter.showWarning('No file is currently open in the editor');
+        return;
+      }
+
+      // Add file to session
+      const success = await this.sessionService.addFileToSession(
+        item.session.id,
+        activeFile
+      );
+
+      if (success) {
+        vscodeAdapter.showInfo(`File added to session "${item.session.name}"`);
+      }
+    } catch (error) {
+      vscodeAdapter.showError(
+        `Failed to add file: ${error instanceof Error ? error.message : String(error)}`
       );
     }
   }

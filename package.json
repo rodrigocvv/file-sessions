@@ -89,6 +89,12 @@
         "icon": "$(trash)"
       },
       {
+        "command": "fileSessions.addFileToSession",
+        "title": "Add Current File to Session",
+        "category": "File Sessions",
+        "icon": "$(add)"
+      },
+      {
         "command": "fileSessions.removeFileFromSession",
         "title": "Remove File from Session",
         "category": "File Sessions",
@@ -178,6 +184,11 @@
           "group": "inline"
         },
         {
+          "command": "fileSessions.addFileToSession",
+          "when": "view == fileSessions.sessionsView && viewItem == session",
+          "group": "inline"
+        },
+        {
           "command": "fileSessions.openFiles",
           "when": "view == fileSessions.sessionsView && viewItem == session",
           "group": "open@1"
@@ -241,6 +252,10 @@
         },
         {
           "command": "fileSessions.deleteSession",
+          "when": "false"
+        },
+        {
+          "command": "fileSessions.addFileToSession",
           "when": "false"
         },
         {
