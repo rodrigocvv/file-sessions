@@ -2,7 +2,7 @@
   "name": "file-sessions",
   "displayName": "File Sessions",
   "description": "Save, manage, and restore groups of open files in your workspace",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "publisher": "rodrigocvv",
   "icon": "icon.png",
   "license": "MIT",
