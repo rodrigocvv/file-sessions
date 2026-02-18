@@ -453,7 +453,7 @@ export class CommandManager {
   private async handleOpenSettings(): Promise<void> {
     await vscode.commands.executeCommand(
       'workbench.action.openSettings',
-      '@ext:your-publisher-name.file-sessions'
+      '@ext:rodrigocvv.file-sessions'
     );
   }
 }
