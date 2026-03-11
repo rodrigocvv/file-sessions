@@ -96,6 +96,8 @@ code --install-extension rodrigocvv.file-sessions
 - **Rename**: Right-click session → "Rename Session"
 - **Delete**: Right-click session → "Delete Session"
 - **Remove Individual Files**: Expand session → click **✖️** next to a file
+- **Remove Multiple Files**: Hold `Shift` or `Ctrl`/`Cmd` to select files → right-click → "Remove File(s) from Session"
+- **Open Multiple Files**: Hold `Shift` or `Ctrl`/`Cmd` to select files → right-click → "Open File(s)"
 - **View Files**: Click on session name to expand and see all files
 - **Open Single File**: Click on any file in the session to open just that file
 
@@ -383,7 +385,8 @@ Manual sessions you create for different tasks and features.
 - ➕ **Add File** - Add currently open file to session
 - ✏️ **Rename** - Change session name
 - 🗑️ **Delete** - Remove session
-- ✖️ **Remove File** - Remove single file from session
+- ✖️ **Remove File** - Remove single file from session (inline button)
+- 🗂️ **Multi-select** - Hold `Shift`/`Ctrl` to select multiple files, then right-click for "Open File(s)" or "Remove File(s) from Session"
 
 ---
 
