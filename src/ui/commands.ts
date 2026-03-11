@@ -39,8 +39,15 @@ export class CommandManager {
     this.registerCommand('fileSessions.addFileToSession', (item: SessionTreeItem) =>
       this.handleAddFileToSession(item)
     );
-    this.registerCommand('fileSessions.removeFileFromSession', (item: FileTreeItem) =>
-      this.handleRemoveFileFromSession(item)
+    this.registerCommand(
+      'fileSessions.removeFileFromSession',
+      (item: FileTreeItem, allSelected: FileTreeItem[]) =>
+        this.handleRemoveFileFromSession(item, allSelected)
+    );
+    this.registerCommand(
+      'fileSessions.openSelectedFiles',
+      (item: FileTreeItem, allSelected: FileTreeItem[]) =>
+        this.handleOpenSelectedFiles(item, allSelected)
     );
 
     // Branch session commands
@@ -253,26 +260,82 @@ export class CommandManager {
   }
 
   /**
-   * Handle remove file from session command
+   * Handle remove file(s) from session command (supports multi-select)
    */
-  private async handleRemoveFileFromSession(item: FileTreeItem): Promise<void> {
+  private async handleRemoveFileFromSession(
+    item: FileTreeItem,
+    allSelected: FileTreeItem[]
+  ): Promise<void> {
     if (!item || !item.file) {
       vscodeAdapter.showError('Invalid file');
       return;
     }
 
     try {
-      const success = await this.sessionService.removeFileFromSession(
-        item.sessionId,
-        item.file.path
-      );
+      const items =
+        allSelected && allSelected.length > 1 ? allSelected : [item];
+
+      // Group by sessionId (all selected items should be from the same session,
+      // but handle gracefully if not)
+      const bySession = new Map<string, string[]>();
+      for (const fileItem of items) {
+        if (!(fileItem instanceof FileTreeItem)) {
+          continue;
+        }
+        const paths = bySession.get(fileItem.sessionId) ?? [];
+        paths.push(fileItem.file.path);
+        bySession.set(fileItem.sessionId, paths);
+      }
+
+      let success = true;
+      for (const [sessionId, paths] of bySession) {
+        const result = await this.sessionService.removeFilesFromSession(sessionId, paths);
+        if (!result) {
+          success = false;
+        }
+      }
 
       if (success) {
-        vscodeAdapter.showInfo('File removed from session');
+        const count = items.length;
+        vscodeAdapter.showInfo(
+          count === 1 ? 'File removed from session' : `${count} files removed from session`
+        );
       }
     } catch (error) {
       vscodeAdapter.showError(
         `Failed to remove file: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
+  }
+
+  /**
+   * Handle open selected file(s) command (supports multi-select)
+   */
+  private async handleOpenSelectedFiles(
+    item: FileTreeItem,
+    allSelected: FileTreeItem[]
+  ): Promise<void> {
+    if (!item || !item.file) {
+      vscodeAdapter.showError('Invalid file');
+      return;
+    }
+
+    try {
+      const items =
+        allSelected && allSelected.length > 1 ? allSelected : [item];
+
+      for (const fileItem of items) {
+        if (!(fileItem instanceof FileTreeItem)) {
+          continue;
+        }
+        await vscode.commands.executeCommand(
+          'vscode.open',
+          vscode.Uri.file(fileItem.file.path)
+        );
+      }
+    } catch (error) {
+      vscodeAdapter.showError(
+        `Failed to open files: ${error instanceof Error ? error.message : String(error)}`
       );
     }
   }

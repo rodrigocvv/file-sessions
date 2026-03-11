@@ -2,7 +2,7 @@
   "name": "file-sessions",
   "displayName": "File Sessions",
   "description": "Save, manage, and restore groups of open files in your workspace",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "publisher": "rodrigocvv",
   "icon": "icon.png",
   "license": "MIT",
@@ -96,9 +96,15 @@
       },
       {
         "command": "fileSessions.removeFileFromSession",
-        "title": "Remove File from Session",
+        "title": "Remove File(s) from Session",
         "category": "File Sessions",
         "icon": "$(close)"
+      },
+      {
+        "command": "fileSessions.openSelectedFiles",
+        "title": "Open File(s)",
+        "category": "File Sessions",
+        "icon": "$(go-to-file)"
       },
       {
         "command": "fileSessions.openBranchSession",
@@ -209,6 +215,16 @@
           "group": "inline"
         },
         {
+          "command": "fileSessions.openSelectedFiles",
+          "when": "view == fileSessions.sessionsView && viewItem == sessionFile",
+          "group": "open@1"
+        },
+        {
+          "command": "fileSessions.removeFileFromSession",
+          "when": "view == fileSessions.sessionsView && viewItem == sessionFile",
+          "group": "manage@1"
+        },
+        {
           "command": "fileSessions.openBranchSession",
           "when": "view == fileSessions.branchSessionsView && viewItem == branchSession",
           "group": "inline"
@@ -260,6 +276,10 @@
         },
         {
           "command": "fileSessions.removeFileFromSession",
+          "when": "false"
+        },
+        {
+          "command": "fileSessions.openSelectedFiles",
           "when": "false"
         },
         {

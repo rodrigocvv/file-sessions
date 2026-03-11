@@ -294,6 +294,47 @@ export class SessionService {
   }
 
   /**
+   * Remove multiple files from a session in one atomic operation
+   */
+  async removeFilesFromSession(sessionId: string, filePaths: string[]): Promise<boolean> {
+    try {
+      const session = this.getSessionById(sessionId);
+      if (!session) {
+        vscodeAdapter.showError('Session not found');
+        return false;
+      }
+
+      const pathSet = new Set(filePaths);
+      const updatedFiles = session.files.filter((f) => !pathSet.has(f.path));
+
+      if (updatedFiles.length === session.files.length) {
+        vscodeAdapter.showError('Files not found in session');
+        return false;
+      }
+
+      const updatedSession = updateSession(session, { files: updatedFiles });
+      const index = this.sessions.findIndex((s) => s.id === sessionId);
+      this.sessions[index] = updatedSession;
+
+      await this.repository.saveSessions(this.sessions);
+      this.events.emit({ type: 'sessionUpdated', session: updatedSession });
+
+      this.logger.appendLine(
+        `Removed ${filePaths.length} file(s) from session "${session.name}"`
+      );
+
+      return true;
+    } catch (error) {
+      const message = `Failed to remove files: ${
+        error instanceof Error ? error.message : String(error)
+      }`;
+      this.logger.appendLine(message);
+      vscodeAdapter.showError(message);
+      return false;
+    }
+  }
+
+  /**
    * Remove a file from a session
    */
   async removeFileFromSession(sessionId: string, filePath: string): Promise<boolean> {

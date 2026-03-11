@@ -5,6 +5,15 @@ All notable changes to the "File Sessions" extension will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-03-10
+
+### Added
+- **Multi-select for Session Files**: Select multiple files inside a saved session using `Shift` or `Ctrl`/`Cmd` and act on them all at once
+  - **Remove File(s) from Session**: Click the ✖️ inline button or right-click → "Remove File(s) from Session" to remove all selected files in one atomic operation
+  - **Open File(s)**: Right-click → "Open File(s)" to open all selected files at once
+  - Right-click context menu on session file items now exposes both "Open File(s)" and "Remove File(s) from Session" actions
+- New `removeFilesFromSession()` batch method in `SessionService` for atomic multi-file removal (single save + single event)
+
 ## [1.1.1] - 2026-02-18
 
 ### Fixed
@@ -66,6 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No telemetry or data collection
 - Open source with MIT license
 
+[1.2.0]: https://github.com/rodrigocvv/file-sessions/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/rodrigocvv/file-sessions/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/rodrigocvv/file-sessions/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/rodrigocvv/file-sessions/releases/tag/v1.0.0

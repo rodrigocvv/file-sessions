@@ -42,6 +42,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     const treeView = vscode.window.createTreeView('fileSessions.sessionsView', {
       treeDataProvider: treeProvider,
       showCollapseAll: true,
+      canSelectMany: true,
     });
     context.subscriptions.push(treeView);
 
